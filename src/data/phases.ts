@@ -1,9 +1,9 @@
 export interface PhaseInfo {
-	title: string;
-	link: string;
+  title: string;
+  link: string;
 }
 
 export enum Phase {
-	ONE,
-	TWO,
+  ONE = "phase-1",
+  TWO = "phase-2",
 }
