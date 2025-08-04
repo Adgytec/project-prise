@@ -1,7 +1,7 @@
 import Hero from "@/components/Hero/Hero";
 import React from "react";
 import Container from "@/components/Container/Container";
-import { LIMIT, PageInfo } from "@/data/helper";
+import { LIMIT, PageInfo, safeApiCall, buildApiUrl, ApiResponse } from "@/data/helper";
 import { Album } from "../../phase-1/page";
 import ImageList from "../../components/images/ImageList";
 
@@ -10,24 +10,29 @@ export const revalidate = 60 * 60;
 export const dynamicParams = true;
 
 export async function generateStaticParams() {
-	const url = `${process.env.NEXT_PUBLIC_API}/services/gallery/albums`;
+	const url = buildApiUrl('/services/gallery/albums');
+	
+	if (!url) {
+		console.warn('Environment variables not available during build, skipping static generation');
+		return [];
+	}
 
-	const albums = await fetch(url, {
+	const albums = await safeApiCall<ApiResponse>(url, {
 		method: "GET",
 		headers: {
 			Authorization: `Bearer ${process.env.NEXT_PUBLIC_TOKEN_PHASE_II}`,
 		},
-	}).then((res) => res.json());
+	});
 
-	if (albums.error || !albums) {
+	if (!albums || albums.error) {
 		return [];
 	}
 
-	return albums.data.albums.map((album: Album) => {
+	return albums.data?.albums?.map((album: Album) => {
 		return {
 			albumId: album.id,
 		};
-	});
+	}) || [];
 }
 
 export interface Photos {
@@ -37,36 +42,51 @@ export interface Photos {
 }
 
 const page = async ({ params }: { params: { albumId: string } }) => {
-	const url = `${process.env.NEXT_PUBLIC_API}/services/gallery/album/${params.albumId}`;
-	const nameUrl = `${process.env.NEXT_PUBLIC_API}/services/gallery/album/${params.albumId}/name`;
+	const url = buildApiUrl(`/services/gallery/album/${params.albumId}`);
+	const nameUrl = buildApiUrl(`/services/gallery/album/${params.albumId}/name`);
+
+	if (!url || !nameUrl) {
+		return (
+			<>
+				<Hero heading="" />
+				<Container
+					style={{
+						height: "20rem",
+						display: "grid",
+						placeItems: "center",
+					}}
+				>
+					<h4>Configuration error. Please check environment variables.</h4>
+				</Container>
+			</>
+		);
+	}
 
 	let pageInfo: PageInfo = {
 		nextPage: false,
 		cursor: "",
 	};
-	const photosPromise = fetch(url, {
+	
+	const photosPromise = safeApiCall<ApiResponse>(url, {
 		method: "GET",
 		headers: {
 			Authorization: `Bearer ${process.env.NEXT_PUBLIC_TOKEN_PHASE_II}`,
 		},
-	})
-		.then((res) => res.json())
-		.then((res) => {
-			if (res.error) throw new Error(res.message);
-			pageInfo = res.data.pageInfo;
-			return res.data.photos;
-		});
-	const namePromise = fetch(nameUrl, {
+	}).then((res) => {
+		if (res?.error) throw new Error(res.message || 'API error');
+		pageInfo = res?.data?.pageInfo || { nextPage: false, cursor: "" };
+		return res?.data?.photos || [];
+	});
+	
+	const namePromise = safeApiCall<ApiResponse>(nameUrl, {
 		method: "GET",
 		headers: {
 			Authorization: `Bearer ${process.env.NEXT_PUBLIC_TOKEN_PHASE_II}`,
 		},
-	})
-		.then((res) => res.json())
-		.then((res) => {
-			if (res.error) throw new Error(res.message);
-			return res.data;
-		});
+	}).then((res) => {
+		if (res?.error) throw new Error(res.message || 'API error');
+		return res?.data || null;
+	});
 
 	const [photosResult, nameResult] = await Promise.allSettled([
 		photosPromise,
