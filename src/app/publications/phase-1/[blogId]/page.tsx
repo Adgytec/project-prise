@@ -5,45 +5,58 @@ import SocialShare from "@/components/socialShare/SocialShare";
 import Link from "next/link";
 import Container from "@/components/Container/Container";
 import { categoryMap, BlogItem } from "@/data/blog-category";
+import { safeApiCall, buildApiUrl, ApiResponse } from "@/data/helper";
 
 export const revalidate = 60 * 60;
 
 export const dynamicParams = true;
 
 export async function generateStaticParams() {
-	const url = `${process.env.NEXT_PUBLIC_API}/services/blogs`;
+	const url = buildApiUrl('/services/blogs');
+	
+	if (!url) {
+		console.warn('Environment variables not available during build, skipping static generation');
+		return [];
+	}
 
-	const blogs = await fetch(url, {
+	const blogs = await safeApiCall<ApiResponse>(url, {
 		method: "GET",
 		headers: {
 			Authorization: `Bearer ${process.env.NEXT_PUBLIC_TOKEN}`,
 		},
-	}).then((res) => res.json());
+	});
 
-	if (blogs.error || !blogs) {
+	if (!blogs || blogs.error) {
 		return [];
 	}
 
-	return blogs.data.blogs.map((blog: any) => {
+	return blogs.data?.blogs?.map((blog: any) => {
 		return {
 			blogId: blog.blogId,
 		};
-	});
+	}) || [];
 }
 
 const BlogItemPage = async ({ params }: { params: { blogId: string } }) => {
-	const url = `${process.env.NEXT_PUBLIC_API}/services/blog/${params.blogId}`;
+	const url = buildApiUrl(`/services/blog/${params.blogId}`);
 
-	const blogItem: BlogItem | null = await fetch(url, {
+	if (!url) {
+		return (
+			<div className={styles.loader}>
+				<p>Configuration error. Please check environment variables.</p>
+			</div>
+		);
+	}
+
+	const blogItem: BlogItem | null = await safeApiCall<ApiResponse>(url, {
 		method: "GET",
 		headers: {
 			Authorization: `Bearer ${process.env.NEXT_PUBLIC_TOKEN}`,
 		},
 	})
-		.then((res) => res.json())
 		.then((res) => {
-			if (res.error) throw new Error(res.message);
-			return res.data;
+			if (res?.error) throw new Error(res.message || 'API error');
+			return res?.data || null;
 		})
 		.catch((err) => {
 			console.error(err.message);
