@@ -62,7 +62,7 @@ jobs:
 
       - name: Deploy to AWS ECS (Staging)
         run: |
-          aws ecs update-service --cluster ${{ secrets.AWS_ECS_CLUSTER_STAGING }} --service ${{ secrets.AWS_ECS_SERVICE_STAGING }} --force-new-deployment
+          aws ecs update-service --cluster rural-development-staging-cluster --service rural-development-staging-service --force-new-deployment
 
 
 
@@ -110,7 +110,7 @@ jobs:
 
       - name: Deploy to AWS ECS (Production)
         run: |
-          aws ecs update-service --cluster ${{ secrets.AWS_ECS_CLUSTER_PRODUCTION }} --service ${{ secrets.AWS_ECS_SERVICE_PRODUCTION }} --force-new-deployment
+          aws ecs update-service --cluster rural-development-production-cluster --service rural-development-production-service --force-new-deployment
 
 
 
