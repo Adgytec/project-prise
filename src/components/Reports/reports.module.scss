@@ -1,0 +1,88 @@
+@use "/src/styles/abstracts" as ab;
+
+.container {
+  display: grid;
+  gap: 2em;
+
+  h3 {
+    font-size: 1.5rem;
+  }
+
+  .info {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .pagination {
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+
+    svg {
+      font-size: 1.5rem;
+    }
+  }
+
+  .table {
+    display: grid;
+    column-gap: 1.5rem;
+    row-gap: 0.25rem;
+
+    > :nth-child(even) {
+      background-color: hsl(from var(--accent-secondary) h s l / 0.25);
+    }
+
+    >div {
+      --_span: 3;
+
+      display: grid;
+      grid-template-columns: subgrid;
+      grid-column: span var(--_span);
+
+      padding-block: 1rem;
+      padding-inline: 0.5rem 0.25rem;
+
+      > :nth-child(n + 4) {
+        display: none;
+      }
+
+      @include ab.screen-40 {
+        --_span: 4;
+
+        > :nth-child(n) {
+          display: block;
+        }
+
+        > :nth-child(n + 5) {
+          display: none;
+        }
+      }
+
+      @include ab.screen-48 {
+        --_span: 5;
+
+        > :nth-child(n) {
+          display: block;
+        }
+
+        > :nth-child(n + 6) {
+          display: none;
+        }
+      }
+
+      @include ab.screen-64 {
+        --_span: 8;
+
+        > :nth-child(n) {
+          display: block;
+        }
+      }
+
+      >* {
+        grid-column: span 1;
+      }
+    }
+  }
+}
