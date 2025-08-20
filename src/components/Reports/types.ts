@@ -14,6 +14,8 @@ export interface ReportItem {
   "Lieu d'implantation": string;
   Secteur: string;
   "Site d'intervention": string;
+  Latitude: string;
+  Longitude: string;
 }
 
 export const regions = [

@@ -63,25 +63,29 @@ const ReportsDisplay = ({ heading, data }: ReportsDisplayProps) => {
       <div className={styles.table}>
         <div className={styles.table_heading}>
           <h4>N°</h4>
-          <h4>Ouvrage</h4>
+          {/* <h4>Ouvrage</h4> */}
           <h4>Territoire</h4>
-          <h4>Infrastructures</h4>
-          <h4>{"Lieu d'implantation"}</h4>
-          <h4>Secteur</h4>
           <h4>{"Site d'intervention"}</h4>
-          <h4>Coordonnées</h4>
+          <h4>Infrastructures</h4>
+          {/* <h4>{"Lieu d'implantation"}</h4> */}
+          {/* <h4>Secteur</h4> */}
+          {/* <h4>Coordonnées</h4> */}
+          <h4>Latitude</h4>
+          <h4>Longitude</h4>
         </div>
 
         {currentPageData.map((item, index) => (
           <div key={item.id}>
             <p>{(currentPage - 1) * itemsPerPage + index + 1}</p>
-            <p>{item.Ouvrage || "-"}</p>
+            {/* <p>{item.Ouvrage || "-"}</p> */}
             <p>{item.Territoire || "-"}</p>
-            <p>{item.Infrastructures || "-"}</p>
-            <p>{item["Lieu d'implantation"] || "-"}</p>
-            <p>{item.Secteur || "-"}</p>
             <p>{item["Site d'intervention"] || "-"}</p>
-            <p>{item["Coordonnées"] || "-"}</p>
+            <p>{item.Infrastructures || "-"}</p>
+            {/* <p>{item["Lieu d'implantation"] || "-"}</p> */}
+            {/* <p>{item.Secteur || "-"}</p> */}
+            {/* <p>{item["Coordonnées"] || "-"}</p> */}
+            <p>{item["Latitude"] || "-"}</p>
+            <p>{item["Longitude"] || "-"}</p>
           </div>
         ))}
       </div>

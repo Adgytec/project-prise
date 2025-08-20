@@ -28,10 +28,12 @@ const Reports = async ({ heading, data, region }: ReportsProps) => {
       console.error(err.message);
       return null;
     });
-  let completeData = data;
-  if (reportItems) {
-    completeData = [...reportItems, ...data];
-  }
+  // let completeData = data;
+  // if (reportItems) {
+  //   completeData = [...reportItems, ...data];
+  // }
+
+  let completeData = reportItems ?? [];
 
   return <ReportsDisplay heading={heading} data={completeData} />;
 };
