@@ -72,6 +72,8 @@ export function convertFromReportTable(data: ReportTable[]): ReportItem[] {
     "Lieu d'implantation": "", // Not present in ReportTable
     Secteur: item.sector || "",
     "Site d'intervention": item.site || "",
+    Latitude: item.latitude,
+    Longitude: item.longitude,
   }));
 }
 
@@ -85,6 +87,8 @@ export function convertFromVariant(data: ReportTableVariant[]): ReportItem[] {
     "Lieu d'implantation": item.implantation || "",
     Secteur: item.sector || "",
     "Site d'intervention": item.site || "",
+    Latitude: "",
+    Longitude: "",
   }));
 }
 
@@ -100,5 +104,7 @@ export function convertFromVariantCommunity(
     "Lieu d'implantation": item.implantation || "",
     Secteur: item.collectivité || "", // collectivité mapped to Secteur
     "Site d'intervention": item.site || "",
+    Latitude: "",
+    Longitude: "",
   }));
 }
