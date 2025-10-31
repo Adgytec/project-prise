@@ -186,6 +186,10 @@ export const rootLinks = {
     title: "Le ministère",
     link: "/le-ministere",
   },
+  events: {
+    title: "Événement",
+    link: "/events",
+  },
   contact: {
     title: "Contact",
     link: "/contact",
@@ -274,6 +278,7 @@ export const navBarLinks: NavBarLinks[] = [
     ],
   },
   rootLinks.theMinistry,
+  rootLinks.events,
   rootLinks.contact,
 ];
 
