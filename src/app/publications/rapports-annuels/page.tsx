@@ -65,6 +65,10 @@ const prise2: Doc[] = [
         title: "RAPPORT T1-2026 DES ACTIVITES PRISE II",
         link: "/annual-reports/RAPPORT T1-2026 DES ACTIVITES PRISE II.pdf",
     },
+    {
+        title: "RAPPORT T2-2026 DES ACTIVITES PRISE II FINAL",
+        link: "/annual-reports/RAPPORT T2-2026 DES ACTIVITES PRISE II FINAL.pdf",
+    },
 ];
 
 const RapportAnnuelsPage = () => {
